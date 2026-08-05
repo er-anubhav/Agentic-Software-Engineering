@@ -1,10 +1,18 @@
 import unittest
-from memory.graph_db import CodeGraph, GraphNode, GraphRelationship
+from memory.graph_db import CodeGraph, GraphNode, GraphRelationship, HAS_NEO4J
 from memory.vector_store import VectorMemoryStore, compute_cosine_similarity
 from memory.hybrid_memory import HybridMemoryEngine
 
 
 class TestMemory(unittest.TestCase):
+
+    def test_neo4j_cypher_execution_and_summary(self):
+        self.assertTrue(HAS_NEO4J, "neo4j package must be installed")
+        graph = CodeGraph()
+        summary = graph.get_summary()
+        self.assertIn("total_nodes", summary)
+        self.assertIn("total_relationships", summary)
+        self.assertIn("neo4j_driver_available", summary)
 
     def test_cosine_similarity_math(self):
         v1 = [1.0, 0.0, 0.0]
