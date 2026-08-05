@@ -1,40 +1,60 @@
 """
-src/core/config.py — Layer 0: Enterprise Platform Configuration System.
+src.core.config — Layer 0: System Configuration & Modular Domain Config Hierarchy.
 """
 import os
-import logging
-from functools import lru_cache
 from typing import Optional
 from pydantic import BaseModel, Field
 
-logger = logging.getLogger(__name__)
+
+class BaseConfig(BaseModel):
+    app_name: str = "Agentic Software Engineering Platform"
+    version: str = "2.0.0"
+
+
+class EnvironmentConfig(BaseModel):
+    environment: str = Field(default_factory=lambda: os.getenv("ENVIRONMENT", "development"))
+    debug: bool = Field(default_factory=lambda: os.getenv("DEBUG", "true").lower() == "true")
+    log_level: str = Field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
+
+
+class SecretsConfig(BaseModel):
+    openai_api_key: str = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
+    anthropic_api_key: str = Field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY", ""))
+    gemini_api_key: str = Field(default_factory=lambda: os.getenv("GEMINI_API_KEY", ""))
+    jwt_secret_key: str = Field(default_factory=lambda: os.getenv("JWT_SECRET_KEY", "insecure_dev_secret"))
+
+    def sanitize(self) -> dict:
+        return {
+            "has_openai_key": bool(self.openai_api_key),
+            "has_anthropic_key": bool(self.anthropic_api_key),
+            "has_gemini_key": bool(self.gemini_api_key),
+        }
+
+
+class RuntimeConfig(BaseModel):
+    sqlite_db_path: str = Field(default_factory=lambda: os.getenv("SQLITE_DB_PATH", "platform.db"))
+    ollama_base_url: str = Field(default_factory=lambda: os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"))
+    max_concurrent_workers: int = Field(default_factory=lambda: int(os.getenv("MAX_WORKERS", "10")))
 
 
 class Settings(BaseModel):
-    """
-    Production Settings Model with Environment Variable Overrides.
-    """
-    app_name: str = Field(default_factory=lambda: os.getenv("APP_NAME", "Agentic Software Engineering Platform"))
-    version: str = Field(default="2.0.0-alpha")
-    debug: bool = Field(default_factory=lambda: os.getenv("DEBUG", "false").lower() == "true")
-    environment: str = Field(default_factory=lambda: os.getenv("ENV", "development"))
-
-    # Model / Inference Settings
-    ollama_model: str = Field(default_factory=lambda: os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b"))
-    ollama_temperature: float = Field(default_factory=lambda: float(os.getenv("OLLAMA_TEMPERATURE", "0.0")))
+    app_name: str = "Agentic Software Engineering Platform"
+    version: str = "2.0.0-alpha"
+    repository_path: str = Field(default_factory=os.getcwd)
+    environment: str = "development"
+    debug: bool = True
+    log_level: str = "INFO"
+    sqlite_db_path: str = Field(default_factory=lambda: os.getenv("SQLITE_DB_PATH", "platform.db"))
+    openai_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY"))
+    anthropic_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("ANTHROPIC_API_KEY"))
+    gemini_api_key: Optional[str] = Field(default_factory=lambda: os.getenv("GEMINI_API_KEY"))
     ollama_base_url: str = Field(default_factory=lambda: os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"))
-
-    # Storage & Repository Paths
-    repository_path: str = Field(default_factory=lambda: os.getenv("REPOSITORY_PATH", os.getcwd()))
-    output_dir: str = Field(default_factory=lambda: os.getenv("OUTPUT_DIR", "generated_project"))
-
-    # Security Settings
-    jwt_secret_key: str = Field(default_factory=lambda: os.getenv("JWT_SECRET_KEY", "dev-insecure-secret-change-in-prod"))
-    jwt_algorithm: str = Field(default="HS256")
-    access_token_expire_minutes: int = Field(default=60)
+    jwt_secret_key: str = Field(default_factory=lambda: os.getenv("JWT_SECRET_KEY", "insecure_dev_secret"))
+    base: BaseConfig = Field(default_factory=BaseConfig)
+    env: EnvironmentConfig = Field(default_factory=EnvironmentConfig)
+    secrets: SecretsConfig = Field(default_factory=SecretsConfig)
+    runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
 
 
-@lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    """Thread-safe, cached singleton settings instance."""
     return Settings()

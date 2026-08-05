@@ -43,3 +43,8 @@ class FailoverEngine:
                 continue
 
         raise RuntimeError(f"All LLM providers failed in failover cascade: {str(last_error)}")
+
+from pydantic import BaseModel, Field
+class FallbackStrategy(BaseModel):
+    primary_provider: str = "openai"
+    fallback_chain: List[str] = Field(default_factory=lambda: ["anthropic", "gemini", "ollama"])
