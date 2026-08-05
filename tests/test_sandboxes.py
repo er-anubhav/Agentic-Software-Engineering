@@ -1,7 +1,7 @@
 import unittest
-from sandboxes.local_sandbox import LocalSandbox
-from sandboxes.docker_sandbox import DockerSandbox
-from sandboxes.base_sandbox import SandboxUnavailableException
+from src.infrastructure.sandboxes.local_sandbox import LocalSandbox
+from src.infrastructure.sandboxes.docker_sandbox import DockerSandbox
+from src.infrastructure.sandboxes.base_sandbox import SandboxUnavailableException
 
 
 class TestSandboxes(unittest.TestCase):

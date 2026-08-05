@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock
-from models.state import EngineeringState
-from agents.requirement_agent import RequirementAgent
-from agents.architecture_agent import ArchitectureAgent
-from agents.base_agent import BaseAgent
+from src.domain.models.state import EngineeringState
+from src.application.agents.requirement_agent import RequirementAgent
+from src.application.agents.architecture_agent import ArchitectureAgent
+from src.application.agents.base_agent import BaseAgent
 
 
 class TestAgents(unittest.TestCase):

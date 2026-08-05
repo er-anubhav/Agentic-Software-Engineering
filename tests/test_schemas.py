@@ -1,5 +1,5 @@
 import unittest
-from schemas import (
+from src.domain.models.schemas import (
     RequirementAnalysisSchema,
     PlannerSchema,
     ArchitectureSchema,

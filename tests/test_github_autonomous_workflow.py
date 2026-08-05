@@ -4,16 +4,16 @@ import hmac
 import hashlib
 import uuid
 import unittest
-from github_engine.app_auth import GitHubAppAuth
-from github_engine.webhook_gateway import WebhookGateway
-from github_engine.workspace_manager import RepositoryWorkspaceManager
-from github_engine.git_workflow import GitWorkflowEngine
-from github_engine.pr_engine import AutonomousPREngine
-from github_engine.review_loop import ReviewFeedbackLoop, ReviewComment
-from github_engine.github_mcp_tools import register_github_mcp_tools
-from github_engine.orchestrator import GitHubAutonomousOrchestrator
-from mcp_runtime.tool_registry import MCPToolRegistry
-from models.state import EngineeringState
+from src.infrastructure.github_engine.app_auth import GitHubAppAuth
+from src.infrastructure.github_engine.webhook_gateway import WebhookGateway
+from src.infrastructure.github_engine.workspace_manager import RepositoryWorkspaceManager
+from src.infrastructure.github_engine.git_workflow import GitWorkflowEngine
+from src.infrastructure.github_engine.pr_engine import AutonomousPREngine
+from src.infrastructure.github_engine.review_loop import ReviewFeedbackLoop, ReviewComment
+from src.infrastructure.github_engine.github_mcp_tools import register_github_mcp_tools
+from src.infrastructure.github_engine.orchestrator import GitHubAutonomousOrchestrator
+from src.application.tools.mcp_runtime.tool_registry import MCPToolRegistry
+from src.domain.models.state import EngineeringState
 
 
 class TestGitHubAutonomousWorkflow(unittest.TestCase):

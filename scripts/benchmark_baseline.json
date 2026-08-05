@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "python_version": "3.12.3",
+    "os_platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.39",
+    "cpu_count": 8,
+    "machine": "x86_64",
+    "git_commit": "141eea8",
+    "timestamp": 1785931634.449189
+  },
+  "metrics": {
+    "1000_class_indexing_ms": 54.16,
+    "indexed_symbols_count": 2000.0,
+    "200_node_dag_compilation_ms": 547.3,
+    "repair_patch_ms": 0.73,
+    "cache_hit_ratio_percent": 100.0,
+    "memory_rss_mb": 25.0
+  }
+}

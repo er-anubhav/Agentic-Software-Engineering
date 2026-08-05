@@ -1,7 +1,7 @@
 import unittest
-from memory.graph_db import CodeGraph, GraphNode, GraphRelationship
-from memory.vector_store import VectorMemoryStore
-from memory.context_engine import ContextEngine
+from src.infrastructure.storage.memory.graph_db import CodeGraph, GraphNode, GraphRelationship
+from src.infrastructure.storage.memory.vector_store import VectorMemoryStore
+from src.infrastructure.storage.memory.context_engine import ContextEngine
 
 
 class TestContextEngine(unittest.TestCase):

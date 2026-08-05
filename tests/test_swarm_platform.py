@@ -1,14 +1,14 @@
 import unittest
 
-from swarm.agent_runtime import AgentLifecycleManager, AgentInstance
-from swarm.hierarchical_orchestrator import HierarchicalOrchestrator
-from swarm.task_marketplace import TaskMarketplace
-from swarm.blackboard import SharedBlackboard
-from swarm.message_bus import SwarmMessageBus, TypedMessage
-from swarm.consensus import SwarmConsensusEngine, ConsensusProposal
-from swarm.governance import SwarmGovernanceEngine, GovernancePolicy
-from swarm.swarm_optimizer import SwarmOptimizer
-from swarm.swarm_engine import FederatedSwarmEngine
+from src.application.orchestration.swarm.agent_runtime import AgentLifecycleManager, AgentInstance
+from src.application.orchestration.swarm.hierarchical_orchestrator import HierarchicalOrchestrator
+from src.application.orchestration.swarm.task_marketplace import TaskMarketplace
+from src.application.orchestration.swarm.blackboard import SharedBlackboard
+from src.application.orchestration.swarm.message_bus import SwarmMessageBus, TypedMessage
+from src.application.orchestration.swarm.consensus import SwarmConsensusEngine, ConsensusProposal
+from src.application.orchestration.swarm.governance import SwarmGovernanceEngine, GovernancePolicy
+from src.application.orchestration.swarm.swarm_optimizer import SwarmOptimizer
+from src.application.orchestration.swarm.swarm_engine import FederatedSwarmEngine
 
 
 class TestSwarmPlatform(unittest.TestCase):

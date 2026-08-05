@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import MagicMock
-from sandboxes.base_sandbox import SandboxResult
-from sandboxes.local_sandbox import LocalSandbox
-from agents.reflection_agent import ReflectionAgent, ReflectionReport
-from agents.repair_agent import RepairAgent
+from src.infrastructure.sandboxes.base_sandbox import SandboxResult
+from src.infrastructure.sandboxes.local_sandbox import LocalSandbox
+from src.application.agents.reflection_agent import ReflectionAgent, ReflectionReport
+from src.application.agents.repair_agent import RepairAgent
 from fastapi.testclient import TestClient
-from api.app_api import app
+from src.interfaces.platform.api.app_api import app
 
 
 class TestReflectionRepairAPI(unittest.TestCase):

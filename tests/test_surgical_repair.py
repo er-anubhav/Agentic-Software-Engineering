@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock
-from sandboxes.local_sandbox import LocalSandbox
-from sandboxes.base_sandbox import SandboxResult
-from agents.reflection_agent import ReflectionReport
-from agents.repair_agent import RepairAgent, apply_unified_diff
+from src.infrastructure.sandboxes.local_sandbox import LocalSandbox
+from src.infrastructure.sandboxes.base_sandbox import SandboxResult
+from src.application.agents.reflection_agent import ReflectionReport
+from src.application.agents.repair_agent import RepairAgent, apply_unified_diff
 
 
 class TestSurgicalRepairEngine(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
-from memory.graph_db import CodeGraph, GraphNode, GraphRelationship, HAS_NEO4J
-from memory.vector_store import VectorMemoryStore, compute_cosine_similarity
-from memory.hybrid_memory import HybridMemoryEngine
+from src.infrastructure.storage.memory.graph_db import CodeGraph, GraphNode, GraphRelationship, HAS_NEO4J
+from src.infrastructure.storage.memory.vector_store import VectorMemoryStore, compute_cosine_similarity
+from src.infrastructure.storage.memory.hybrid_memory import HybridMemoryEngine
 
 
 class TestMemory(unittest.TestCase):

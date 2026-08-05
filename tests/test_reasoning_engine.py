@@ -1,18 +1,18 @@
 import unittest
-from reasoning.structured_outputs import (
+from src.infrastructure.inference.reasoning import (
     PlanningDecision,
     RepairDecision,
     ExecutionDecision,
     EvaluationDecision,
     ConfidenceScore
 )
-from reasoning.token_budget import ModelRouter, TokenBudgetManager, ModelTier
-from reasoning.prompt_library import PromptLibrary, PromptTemplate, AutomaticPromptOptimizer
-from reasoning.retry_policy import ReasoningRetryPolicy
-from reasoning.self_critique import SelfCritiqueEngine
-from reasoning.multi_agent_debate import MultiAgentDebateEngine
-from reasoning.reflection_memory import ReasoningReflectionMemory, ReasoningTrajectory
-from reasoning.reasoning_engine import UnifiedReasoningEngine
+from src.infrastructure.inference.reasoning import ModelRouter, TokenBudgetManager, ModelTier
+from src.infrastructure.inference.reasoning import PromptLibrary, PromptTemplate, AutomaticPromptOptimizer
+from src.infrastructure.inference.reasoning import ReasoningRetryPolicy
+from src.infrastructure.inference.reasoning import SelfCritiqueEngine
+from src.infrastructure.inference.reasoning import MultiAgentDebateEngine
+from src.infrastructure.inference.reasoning import ReasoningReflectionMemory, ReasoningTrajectory
+from src.infrastructure.inference.reasoning.reasoning_engine import UnifiedReasoningEngine
 
 
 class TestAgenticReasoningEngine(unittest.TestCase):

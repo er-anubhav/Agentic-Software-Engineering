@@ -1,13 +1,13 @@
 import os
 import shutil
 import unittest
-from models.state import EngineeringState
-from evaluation.benchmark_dataset import BenchmarkTask, BenchmarkDataset
-from evaluation.metrics_engine import ExecutionMetrics, PatchComparer, QualityScoreCalculator
-from evaluation.failure_classifier import FailureClassifier, FailureCategory
-from evaluation.replay_engine import ReplayEngine, WorkflowTrajectory
-from evaluation.experiment_tracker import ExperimentTracker, ExperimentRun
-from evaluation.evaluation_runner import EvaluationRunner
+from src.domain.models.state import EngineeringState
+from src.evaluation.benchmark_dataset import BenchmarkTask, BenchmarkDataset
+from src.evaluation.metrics_engine import ExecutionMetrics, PatchComparer, QualityScoreCalculator
+from src.evaluation.failure_classifier import FailureClassifier, FailureCategory
+from src.evaluation.replay_engine import ReplayEngine, WorkflowTrajectory
+from src.evaluation.experiment_tracker import ExperimentTracker, ExperimentRun
+from src.evaluation.evaluation_runner import EvaluationRunner
 
 
 class TestEvaluationHarness(unittest.TestCase):
@@ -129,7 +129,7 @@ class TestEvaluationHarness(unittest.TestCase):
         mock_state.execution_status = "COMPLETED"
         mock_state.metadata = {"repair_attempts": 0, "tokens_used": 1500, "generated_patch": "a = 1"}
 
-        with unittest.mock.patch("orchestrator.workflow.Workflow.execute", return_value=mock_state):
+        with unittest.mock.patch("src.application.orchestration.workflow.Workflow.execute", return_value=mock_state):
             run = runner.run_benchmark_task(task)
             self.assertIsNotNone(run.run_id)
             self.assertEqual(run.status, "PASS")

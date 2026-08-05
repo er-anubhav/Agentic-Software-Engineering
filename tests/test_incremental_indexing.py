@@ -2,8 +2,8 @@ import os
 import shutil
 import tempfile
 import unittest
-from models.state import EngineeringState
-from agents.codebase_analysis_agent import CodebaseAnalysisAgent
+from src.domain.models.state import EngineeringState
+from src.application.agents.codebase_analysis_agent import CodebaseAnalysisAgent
 
 
 class TestIncrementalIndexing(unittest.TestCase):

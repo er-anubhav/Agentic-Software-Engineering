@@ -1,10 +1,10 @@
 import unittest
-from mcp_runtime.tool_registry import MCPToolRegistry, MCPTool, PermissionLevel
-from mcp_runtime.permission_engine import PermissionEngine, PermissionViolationException
-from mcp_runtime.health_monitor import ToolHealthMonitor
-from mcp_runtime.capability_registry import CapabilityRegistry, CapabilityRouter, Capability
-from mcp_runtime.agent_negotiator import AgentNegotiator
-from mcp_runtime.tool_memory import ToolMemory
+from src.application.tools.mcp_runtime.tool_registry import MCPToolRegistry, MCPTool, PermissionLevel
+from src.application.tools.mcp_runtime.permission_engine import PermissionEngine, PermissionViolationException
+from src.application.tools.mcp_runtime.health_monitor import ToolHealthMonitor
+from src.application.tools.mcp_runtime.capability_registry import CapabilityRegistry, CapabilityRouter, Capability
+from src.application.tools.mcp_runtime.agent_negotiator import AgentNegotiator
+from src.application.tools.mcp_runtime.tool_memory import ToolMemory
 
 
 class TestMCPRuntimeEcosystem(unittest.TestCase):

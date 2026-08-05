@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import MagicMock
-from models.state import EngineeringState
-from orchestrator.dag_compiler import DAGNode, TaskDAG, DAGCompiler
-from agents.planner_agent import PlannerAgent
-from agents.execution_planner_agent import ExecutionPlannerAgent
+from src.domain.models.state import EngineeringState
+from src.application.orchestration.dag_compiler import DAGNode, TaskDAG, DAGCompiler
+from src.application.agents.planner_agent import PlannerAgent
+from src.application.orchestration.execution_planner_agent import ExecutionPlannerAgent
 
 
 class TestIntelligentPlannerEngine(unittest.TestCase):

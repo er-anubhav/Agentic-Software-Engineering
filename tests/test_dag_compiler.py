@@ -1,5 +1,5 @@
 import unittest
-from orchestrator.dag_compiler import DAGCompiler, TaskDAG, DAGNode
+from src.application.orchestration.dag_compiler import DAGCompiler, TaskDAG, DAGNode
 
 
 class TestDAGCompiler(unittest.TestCase):

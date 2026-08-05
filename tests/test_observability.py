@@ -3,12 +3,12 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor
 from fastapi.testclient import TestClient
 
-from observability.tracer import Tracer, Trace, Span
-from observability.metrics import TelemetryCollector, TelemetryMetrics
-from observability.exporters import TraceExporter
-from observability.profiler import PerformanceProfiler
-from observability.regression_detector import RegressionDetector
-from api.app_api import app
+from src.infrastructure.observability.tracer import Tracer, Trace, Span
+from src.infrastructure.observability.metrics import TelemetryCollector, TelemetryMetrics
+from src.infrastructure.observability.exporters import TraceExporter
+from src.infrastructure.observability.profiler import PerformanceProfiler
+from src.infrastructure.observability.regression_detector import RegressionDetector
+from src.interfaces.platform.api.app_api import app
 
 
 class TestObservabilityFramework(unittest.TestCase):

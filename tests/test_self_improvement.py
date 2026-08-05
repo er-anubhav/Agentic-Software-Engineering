@@ -1,13 +1,13 @@
 import unittest
 
-from learning.experience_store import ExperienceStore, EngineeringExperience
-from learning.planner_optimizer import PlannerOptimizer
-from learning.retrieval_optimizer import RetrievalOptimizer
-from learning.model_optimizer import ModelOptimizer
-from learning.prompt_evolution import PromptEvolutionEngine, PromptVariant
-from learning.pattern_mining import PatternMiningEngine
-from learning.knowledge_distillation import KnowledgeDistillationEngine
-from learning.self_improvement_engine import SelfImprovementEngine
+from src.application.learning.experience_store import ExperienceStore, EngineeringExperience
+from src.application.learning.planner_optimizer import PlannerOptimizer
+from src.application.learning.retrieval_optimizer import RetrievalOptimizer
+from src.application.learning.model_optimizer import ModelOptimizer
+from src.application.learning.prompt_evolution import PromptEvolutionEngine, PromptVariant
+from src.application.learning.pattern_mining import PatternMiningEngine
+from src.application.learning.knowledge_distillation import KnowledgeDistillationEngine
+from src.application.learning.self_improvement_engine import SelfImprovementEngine
 
 
 class TestSelfImprovementEngine(unittest.TestCase):

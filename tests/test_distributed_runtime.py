@@ -1,12 +1,12 @@
 import os
 import shutil
 import unittest
-from orchestrator.dag_compiler import DAGCompiler, DAGNode, TaskDAG
-from runtime.job_queue import DurableJobQueue, Job, JobStatus
-from runtime.event_bus import EventBus, Event, EventType
-from runtime.checkpoint_manager import CheckpointManager, Checkpoint
-from runtime.worker import Worker, WorkerRole, WorkerPool
-from runtime.scheduler import DistributedScheduler
+from src.application.orchestration.dag_compiler import DAGCompiler, DAGNode, TaskDAG
+from src.infrastructure.sandboxes.runtime.job_queue import DurableJobQueue, Job, JobStatus
+from src.infrastructure.sandboxes.runtime.event_bus import EventBus, Event, EventType
+from src.infrastructure.sandboxes.runtime.checkpoint_manager import CheckpointManager, Checkpoint
+from src.infrastructure.sandboxes.runtime.worker import Worker, WorkerRole, WorkerPool
+from src.infrastructure.sandboxes.runtime.scheduler import DistributedScheduler
 
 
 class TestDistributedRuntime(unittest.TestCase):

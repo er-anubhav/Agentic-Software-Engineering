@@ -1,15 +1,15 @@
 import os
 import shutil
 import unittest
-from autonomy.goal_manager import GoalLifecycleManager, GoalStatus, GoalPriority
-from autonomy.observation_engine import ObservationEngine
-from autonomy.progress_engine import ProgressEngine
-from autonomy.replanner import DynamicReplanner
-from autonomy.policy_engine import ExecutionPolicyEngine, PolicyAction
-from autonomy.goal_validator import GoalValidator
-from autonomy.human_gate import HumanApprovalGate
-from autonomy.long_horizon_engine import LongHorizonAutonomousEngine
-from orchestrator.dag_compiler import DAGCompiler, DAGNode
+from src.application.orchestration.autonomy.goal_manager import GoalLifecycleManager, GoalStatus, GoalPriority
+from src.application.orchestration.autonomy.observation_engine import ObservationEngine
+from src.application.orchestration.autonomy.progress_engine import ProgressEngine
+from src.application.orchestration.autonomy.replanner import DynamicReplanner
+from src.application.orchestration.autonomy.policy_engine import ExecutionPolicyEngine, PolicyAction
+from src.application.orchestration.autonomy.goal_validator import GoalValidator
+from src.application.orchestration.autonomy.human_gate import HumanApprovalGate
+from src.application.orchestration.autonomy.long_horizon_engine import LongHorizonAutonomousEngine
+from src.application.orchestration.dag_compiler import DAGCompiler, DAGNode
 
 
 class TestLongHorizonAutonomousExecution(unittest.TestCase):

@@ -1,14 +1,14 @@
 import os
 import unittest
 
-from auth.oidc import AuthProvider, UserIdentity
-from security.rbac import RBACEngine, Role, Permission
-from tenant.tenant_manager import TenantManager, Tenant, TenantQuota
-from persistence.postgres_store import PostgresStore, JobRecord
-from infra.redis_client import RedisRuntime
-from infra.secrets_manager import SecretsManager
-from infra.object_storage import ObjectStorage
-from infra.disaster_recovery import DisasterRecoveryEngine
+from src.interfaces.platform.auth.oidc import AuthProvider, UserIdentity
+from src.interfaces.platform.security.rbac import RBACEngine, Role, Permission
+from src.interfaces.platform.tenant.tenant_manager import TenantManager, Tenant, TenantQuota
+from src.infrastructure.storage.persistence.postgres_store import PostgresStore, JobRecord
+from src.infrastructure.storage.infra.redis_client import RedisRuntime
+from src.infrastructure.storage.infra.secrets_manager import SecretsManager
+from src.infrastructure.storage.infra.object_storage import ObjectStorage
+from src.infrastructure.storage.infra.disaster_recovery import DisasterRecoveryEngine
 
 
 class TestEnterprisePlatform(unittest.TestCase):
@@ -100,7 +100,9 @@ class TestEnterprisePlatform(unittest.TestCase):
         self.assertTrue(restored)
 
     def test_k8s_deployment_manifest_exists(self):
-        manifest_path = "/home/anubhavtripathi/Documents/Projects/agentic-se/deployment/manifests/k8s_deployment.yaml"
+        manifest_path = os.path.join("src", "interfaces", "platform", "deployment", "manifests", "k8s_deployment.yaml")
+        if not os.path.exists(manifest_path):
+            manifest_path = os.path.join("src", "platform", "deployment", "manifests", "k8s_deployment.yaml")
         self.assertTrue(os.path.exists(manifest_path))
 
 

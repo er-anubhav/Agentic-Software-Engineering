@@ -1,7 +1,7 @@
 import unittest
 import os
-from core.config import get_settings
-from core.container import get_container
+from src.core.config import get_settings
+from src.core.container import get_container
 
 
 class TestCore(unittest.TestCase):

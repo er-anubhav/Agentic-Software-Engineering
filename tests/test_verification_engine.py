@@ -1,14 +1,14 @@
 import unittest
 
-from verification.contracts import EngineeringContract, PreCondition, PostCondition
-from verification.symbolic_executor import SymbolicExecutor
-from verification.semantic_validator import SemanticValidator
-from verification.impact_analysis import DependencyImpactAnalyzer
-from verification.invariant_engine import InvariantEngine
-from verification.risk_engine import RiskAssessmentEngine
-from verification.deployment_gate import DeploymentGate
-from verification.rollback_engine import AutomaticRollbackEngine
-from verification.verification_engine import UnifiedVerificationEngine
+from src.domain.verification.contracts import EngineeringContract, PreCondition, PostCondition
+from src.domain.verification.symbolic_executor import SymbolicExecutor
+from src.domain.verification.semantic_validator import SemanticValidator
+from src.domain.verification.impact_analysis import DependencyImpactAnalyzer
+from src.domain.verification.invariant_engine import InvariantEngine
+from src.domain.verification.risk_engine import RiskAssessmentEngine
+from src.domain.verification.deployment_gate import DeploymentGate
+from src.domain.verification.rollback_engine import AutomaticRollbackEngine
+from src.domain.verification.verification_engine import UnifiedVerificationEngine
 
 
 class TestFormalVerificationEngine(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
-from fault_injection.chaos_runner import run_chaos_fault_injection_experiments
-from stress.load_tester import run_high_concurrency_stress_test
+from src.evaluation.chaos_runner import run_chaos_fault_injection_experiments
+from src.evaluation.load_tester import run_high_concurrency_stress_test
 
 
 class TestValidationSuite(unittest.TestCase):

@@ -1,13 +1,13 @@
 import os
 import shutil
 import unittest
-from codebase_intelligence.polyglot_parser import PolyglotParser, ASTSymbol
-from codebase_intelligence.scip_index import SCIPDatabase, SCIPSymbol
-from codebase_intelligence.semantic_chunker import SemanticChunker
-from codebase_intelligence.symbol_search import SymbolSearchEngine
-from codebase_intelligence.health_metrics import RepositoryHealthMetricsEngine
-from agents.codebase_analysis_agent import CodebaseAnalysisAgent
-from models.state import EngineeringState
+from src.infrastructure.storage.memory.polyglot_parser import PolyglotParser, ASTSymbol
+from src.infrastructure.storage.memory.scip_index import SCIPDatabase, SCIPSymbol
+from src.infrastructure.storage.memory.semantic_chunker import SemanticChunker
+from src.infrastructure.storage.memory.symbol_search import SymbolSearchEngine
+from src.infrastructure.storage.memory.health_metrics import RepositoryHealthMetricsEngine
+from src.application.agents.codebase_analysis_agent import CodebaseAnalysisAgent
+from src.domain.models.state import EngineeringState
 
 
 class TestPolyglotCodebaseIntelligence(unittest.TestCase):

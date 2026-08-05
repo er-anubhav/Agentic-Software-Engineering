@@ -1,6 +1,6 @@
 import sys
 import argparse
-from orchestrator.workflow import Workflow
+from src.application.orchestration.workflow import Workflow
 
 
 def main():
