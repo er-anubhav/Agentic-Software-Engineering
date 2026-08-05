@@ -75,3 +75,9 @@ Return ONLY valid JSON in this format:
                 root_cause=error_msg,
                 suggested_fix="Fix exception at failing line"
             )
+
+    def execute(self, state: EngineeringState) -> EngineeringState:
+        result = SandboxResult(exit_code=1, stdout="", stderr=state.metadata.get("review_feedback", "Review comment error"))
+        report = self.diagnose(result, {})
+        state.metadata["reflection_report"] = report.dict()
+        return state

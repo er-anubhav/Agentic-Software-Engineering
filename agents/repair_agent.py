@@ -4,6 +4,7 @@ from typing import Dict, Any, List, Optional
 from agents.base_agent import BaseAgent
 from agents.reflection_agent import ReflectionReport, ReflectionAgent
 from sandboxes.base_sandbox import BaseSandbox, SandboxResult
+from models.state import EngineeringState
 
 
 def apply_unified_diff(original_text: str, diff_text: str) -> str:
@@ -187,3 +188,7 @@ Example Format:
         source_code[target_file] = original_code
         sandbox.write_file(target_file, original_code)
         return source_code
+
+    def execute(self, state: EngineeringState) -> EngineeringState:
+        state.execution_status = "COMPLETED"
+        return state
