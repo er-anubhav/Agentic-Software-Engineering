@@ -53,10 +53,10 @@ def compute_cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
 class VectorMemoryStore:
     """
     Production-grade Vector Memory Store using FastEmbed dense text embeddings,
-    Qdrant vector collection indexing, and Cosine Similarity math.
+    Qdrant vector collection indexing, and HNSW cosine similarity search.
     """
 
-    def __init__(self, collection_name: str = "agentic_memory"):
+    def __init__(self, collection_name: str = "agentic_memory", qdrant_url: Optional[str] = None):
         self.collection_name = collection_name
         self.documents: Dict[str, VectorDocument] = {}
 
@@ -68,15 +68,22 @@ class VectorMemoryStore:
             except Exception:
                 pass
 
-        # Initialize Qdrant Client (in-memory)
+        # Initialize Qdrant Client (in-memory or remote cluster)
         self.qdrant_client = None
         if HAS_QDRANT:
             try:
-                self.qdrant_client = QdrantClient(location=":memory:")
-                self.qdrant_client.create_collection(
-                    collection_name=self.collection_name,
-                    vectors_config=VectorParams(size=384, distance=Distance.COSINE)
-                )
+                if qdrant_url:
+                    self.qdrant_client = QdrantClient(url=qdrant_url)
+                else:
+                    self.qdrant_client = QdrantClient(location=":memory:")
+
+                # Create collection if it doesn't exist
+                collections = [c.name for c in self.qdrant_client.get_collections().collections]
+                if self.collection_name not in collections:
+                    self.qdrant_client.create_collection(
+                        collection_name=self.collection_name,
+                        vectors_config=VectorParams(size=384, distance=Distance.COSINE)
+                    )
             except Exception:
                 self.qdrant_client = None
 
@@ -127,8 +134,45 @@ class VectorMemoryStore:
 
     def search(self, query: str, top_k: int = 5) -> List[VectorDocument]:
         query_vector = self._embed(query)
-        results = []
 
+        # Delegate query to Qdrant vector engine if active
+        if self.qdrant_client:
+            try:
+                if hasattr(self.qdrant_client, "search"):
+                    hits = self.qdrant_client.search(
+                        collection_name=self.collection_name,
+                        query_vector=query_vector,
+                        limit=top_k
+                    )
+                    return [
+                        VectorDocument(
+                            id=hit.payload.get("doc_id", str(hit.id)),
+                            text=hit.payload.get("text", ""),
+                            metadata={k: v for k, v in hit.payload.items() if k not in ("doc_id", "text")},
+                            score=hit.score
+                        )
+                        for hit in hits
+                    ]
+                elif hasattr(self.qdrant_client, "query_points"):
+                    query_res = self.qdrant_client.query_points(
+                        collection_name=self.collection_name,
+                        query=query_vector,
+                        limit=top_k
+                    )
+                    return [
+                        VectorDocument(
+                            id=point.payload.get("doc_id", str(point.id)),
+                            text=point.payload.get("text", ""),
+                            metadata={k: v for k, v in point.payload.items() if k not in ("doc_id", "text")},
+                            score=point.score
+                        )
+                        for point in query_res.points
+                    ]
+            except Exception:
+                pass
+
+        # In-memory vector cosine similarity search fallback
+        results = []
         for doc_id, doc in self.documents.items():
             if doc.vector:
                 score = compute_cosine_similarity(query_vector, doc.vector)
