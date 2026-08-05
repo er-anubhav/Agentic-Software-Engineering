@@ -12,11 +12,10 @@
     --accent-purple: #7c3aed;
     --accent-amber: #d97706;
     --accent-rose: #e11d48;
-    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-code: 'Fira Code', 'SF Mono', Consolas, monospace;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
 }
 
 * {
@@ -30,6 +29,7 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     line-height: 1.5;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -57,49 +57,52 @@ body {
 }
 
 .brand-icon {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     background: var(--accent-blue);
     color: #ffffff;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: -0.5px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: -0.3px;
 }
 
 .brand-text h2 {
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--text-main);
-    letter-spacing: -0.3px;
+    letter-spacing: -0.2px;
 }
 
 .badge {
     font-size: 0.7rem;
     padding: 2px 8px;
     border-radius: 6px;
-    background: rgba(37, 99, 235, 0.1);
+    background: rgba(37, 99, 235, 0.08);
     color: var(--accent-blue);
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .badge-outline {
     border: 1px solid var(--border-color);
     color: var(--text-muted);
     background: var(--bg-subtle);
+    font-weight: 400;
 }
 
 .badge-emerald {
-    background: rgba(5, 150, 105, 0.1);
+    background: rgba(5, 150, 105, 0.08);
     color: var(--accent-emerald);
+    font-weight: 500;
 }
 
 .badge-success {
-    background: rgba(5, 150, 105, 0.12);
+    background: rgba(5, 150, 105, 0.1);
     color: var(--accent-emerald);
+    font-weight: 500;
 }
 
 .nav-menu {
@@ -117,8 +120,8 @@ body {
     color: var(--text-muted);
     text-decoration: none;
     border-radius: 6px;
-    font-weight: 500;
-    font-size: 0.9rem;
+    font-weight: 400;
+    font-size: 0.875rem;
     transition: all 0.15s ease-in-out;
 }
 
@@ -129,7 +132,7 @@ body {
 
 .nav-item.active {
     color: var(--accent-blue);
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .system-status-widget {
@@ -150,7 +153,6 @@ body {
 
 .status-indicator.online {
     background: var(--accent-emerald);
-    box-shadow: 0 0 6px rgba(5, 150, 105, 0.4);
 }
 
 .status-info {
@@ -161,11 +163,12 @@ body {
 .status-label {
     font-size: 0.75rem;
     color: var(--text-muted);
+    font-weight: 400;
 }
 
 .status-val {
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-main);
 }
 
@@ -184,16 +187,17 @@ body {
 }
 
 .header-title h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 500;
     color: var(--text-main);
-    letter-spacing: -0.4px;
+    letter-spacing: -0.3px;
 }
 
 .header-title p {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     margin-top: 0.2rem;
+    font-weight: 400;
 }
 
 .header-actions {
@@ -204,7 +208,7 @@ body {
 .btn {
     padding: 0.6rem 1.1rem;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.875rem;
     cursor: pointer;
     border: none;
@@ -250,22 +254,23 @@ body {
     padding: 0.75rem 1rem;
     border-radius: 6px;
     color: var(--text-main);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-family: var(--font-main);
+    font-weight: 400;
     box-shadow: var(--shadow-sm);
 }
 
 .input-group input:focus {
     outline: none;
     border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
 }
 
 /* Card Styling */
 .card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 1.5rem;
     box-shadow: var(--shadow-sm);
 }
@@ -278,8 +283,8 @@ body {
 }
 
 .card-header h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--text-main);
     letter-spacing: -0.2px;
 }
@@ -309,19 +314,19 @@ body {
 }
 
 .metric-icon {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
 }
 
-.metric-icon.blue { background: rgba(37, 99, 235, 0.08); color: var(--accent-blue); }
-.metric-icon.purple { background: rgba(124, 58, 237, 0.08); color: var(--accent-purple); }
-.metric-icon.emerald { background: rgba(5, 150, 105, 0.08); color: var(--accent-emerald); }
-.metric-icon.amber { background: rgba(217, 119, 6, 0.08); color: var(--accent-amber); }
+.metric-icon.blue { background: rgba(37, 99, 235, 0.06); color: var(--accent-blue); }
+.metric-icon.purple { background: rgba(124, 58, 237, 0.06); color: var(--accent-purple); }
+.metric-icon.emerald { background: rgba(5, 150, 105, 0.06); color: var(--accent-emerald); }
+.metric-icon.amber { background: rgba(217, 119, 6, 0.06); color: var(--accent-amber); }
 
 .metric-data {
     display: flex;
@@ -331,12 +336,12 @@ body {
 .metric-title {
     font-size: 0.78rem;
     color: var(--text-muted);
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .metric-value {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.2rem;
+    font-weight: 500;
     color: var(--text-main);
     letter-spacing: -0.3px;
 }
@@ -344,6 +349,7 @@ body {
 .metric-sub {
     font-size: 0.75rem;
     color: var(--text-muted);
+    font-weight: 400;
 }
 
 /* Dashboard Grid */
@@ -368,12 +374,12 @@ body {
     background: var(--bg-subtle);
     border: 1px solid var(--border-color);
     padding: 0.85rem 1.1rem;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .node-info h4 {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 500;
     color: var(--text-main);
 }
 
@@ -381,6 +387,7 @@ body {
     font-size: 0.78rem;
     color: var(--text-muted);
     margin-top: 2px;
+    font-weight: 400;
 }
 
 .node-info code {
@@ -396,18 +403,18 @@ body {
     padding: 3px 9px;
     border-radius: 6px;
     font-size: 0.72rem;
-    font-weight: 600;
+    font-weight: 500;
 }
 
-.node-status-badge.completed { background: rgba(5, 150, 105, 0.1); color: var(--accent-emerald); }
-.node-status-badge.running { background: rgba(37, 99, 235, 0.1); color: var(--accent-blue); }
+.node-status-badge.completed { background: rgba(5, 150, 105, 0.08); color: var(--accent-emerald); }
+.node-status-badge.running { background: rgba(37, 99, 235, 0.08); color: var(--accent-blue); }
 .node-status-badge.pending { background: #ffffff; border: 1px solid var(--border-color); color: var(--text-muted); }
 
 /* Console Logs */
 .console-body {
     background: #0f172a;
     color: #e2e8f0;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 1rem;
     font-family: var(--font-code);
     font-size: 0.82rem;
@@ -420,6 +427,7 @@ body {
 
 .log-line {
     line-height: 1.45;
+    font-weight: 400;
 }
 
 .log-line.info { color: #93c5fd; }
@@ -438,18 +446,20 @@ body {
     font-size: 0.8rem;
     color: var(--text-muted);
     font-family: var(--font-code);
+    font-weight: 400;
 }
 
 .diff-view {
     background: #ffffff;
     padding: 1rem;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 6px 6px;
     font-family: var(--font-code);
     font-size: 0.82rem;
     overflow-x: auto;
     line-height: 1.5;
+    font-weight: 400;
 }
 
-.diff-head { color: #64748b; font-weight: 600; }
+.diff-head { color: #64748b; font-weight: 500; }
 .diff-chunk { color: #2563eb; }
-.diff-view code { display: block; white-space: pre; color: var(--text-main); }
+.diff-view code { display: block; white-space: pre; color: var(--text-main); font-weight: 400; }
