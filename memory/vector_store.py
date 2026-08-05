@@ -1,4 +1,5 @@
 import math
+import hashlib
 from typing import List, Dict, Any, Optional, Tuple
 from pydantic import BaseModel, Field
 
@@ -30,6 +31,17 @@ class VectorDocument(BaseModel):
     score: float = 0.0
 
 
+def generate_sha256_point_id(repo_id: str, doc_id: str, symbol: Optional[str] = None) -> int:
+    """
+    Generates a deterministic 64-bit integer point ID for Qdrant storage using
+    cryptographic SHA-256 hashing on `repo_id:doc_id:symbol` namespaced string representation.
+    Guarantees seed stability across process restarts.
+    """
+    raw_key = f"{repo_id}:{doc_id}:{symbol or ''}"
+    hash_hex = hashlib.sha256(raw_key.encode("utf-8")).hexdigest()
+    return int(hash_hex[:12], 16)
+
+
 def compute_cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
     if not vec1 or not vec2 or len(vec1) != len(vec2):
         return 0.0
@@ -54,7 +66,7 @@ def compute_cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
 class VectorMemoryStore:
     """
     Production-grade Multi-Tenant Vector Memory Store supporting FastEmbed ONNX
-    batch embedding generation, Qdrant HNSW vector index isolation, and repository namespacing.
+    batch embedding generation, Qdrant HNSW vector index isolation, and SHA256 namespacing.
     """
 
     def __init__(self, collection_name: str = "agentic_memory", qdrant_url: Optional[str] = None):
@@ -100,7 +112,8 @@ class VectorMemoryStore:
             vector = [0.0] * 384
             words = text.lower().split()
             for i, word in enumerate(words):
-                idx = abs(hash(word)) % 384
+                word_hash = int(hashlib.sha256(word.encode("utf-8")).hexdigest()[:8], 16)
+                idx = word_hash % 384
                 vector[idx] += 1.0 / (i + 1.0)
             norm = math.sqrt(sum(x * x for x in vector)) or 1.0
             results.append([x / norm for x in vector])
@@ -125,7 +138,8 @@ class VectorMemoryStore:
 
         if self.qdrant_client:
             try:
-                point_id = abs(hash(doc_id)) % (10 ** 12)
+                symbol = meta.get("symbol")
+                point_id = generate_sha256_point_id(repo_id, doc_id, symbol)
                 self.qdrant_client.upsert(
                     collection_name=self.collection_name,
                     points=[PointStruct(
@@ -170,7 +184,8 @@ class VectorMemoryStore:
             self.documents[doc_id] = doc
             added_docs.append(doc)
 
-            point_id = abs(hash(doc_id)) % (10 ** 12)
+            symbol = meta.get("symbol")
+            point_id = generate_sha256_point_id(repo_id, doc_id, symbol)
             points.append(PointStruct(
                 id=point_id,
                 vector=vector,
