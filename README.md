@@ -10,6 +10,16 @@ An enterprise-grade, autonomous Agentic Software Engineering Platform designed f
 
 ---
 
+## Real-Time Orchestration Dashboard
+
+The platform ships a built-in web UI served at `http://localhost:8000/` for live task DAG visualization, agent execution console streaming (WebSockets), surgical patch diffs, and system telemetry.
+
+![Real-Time Orchestration Dashboard](docs/assets/dashboard.png)
+
+> Start the server with `.venv/bin/python3 app.py --serve` and open [http://localhost:8000](http://localhost:8000).
+
+---
+
 ## 1. System Architecture
 
 The platform enforces a strict 6-layer Domain-Driven Design (DDD) & Hexagonal Architecture hierarchy. Higher layers may import lower layers, but lower layers NEVER import higher layers.
