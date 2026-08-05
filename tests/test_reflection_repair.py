@@ -62,6 +62,19 @@ class TestReflectionRepairAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "HEALTHY")
 
+    def test_api_async_job_submission(self):
+        client = TestClient(app)
+        response = client.post("/api/v1/execute", json={"requirement": "Create REST API"})
+        self.assertEqual(response.status_code, 202)
+        data = response.json()
+        self.assertIn("job_id", data)
+        self.assertEqual(data["status"], "QUEUED")
+
+        job_id = data["job_id"]
+        status_res = client.get(f"/api/v1/jobs/{job_id}")
+        self.assertEqual(status_res.status_code, 200)
+        self.assertIn(status_res.json()["status"], ["QUEUED", "RUNNING", "COMPLETED", "FAILED"])
+
 
 if __name__ == "__main__":
     unittest.main()
