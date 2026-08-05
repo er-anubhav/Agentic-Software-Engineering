@@ -198,12 +198,48 @@ async def job_websocket_endpoint(websocket: WebSocket, job_id: str):
             WEBSOCKET_SUBSCRIBERS[job_id].remove(websocket)
 
 
+# Global broadcast subscribers for the dashboard console stream
+_BROADCAST_CLIENTS: List["WebSocket"] = []
+
+
+@app.websocket("/ws/execution")
+async def execution_broadcast_ws(websocket: WebSocket):
+    """General-purpose broadcast channel for the real-time dashboard console."""
+    await websocket.accept()
+    _BROADCAST_CLIENTS.append(websocket)
+    try:
+        # Send a welcome event immediately on connection
+        await websocket.send_json({"type": "connected", "message": "Dashboard WebSocket stream live. Waiting for workflow events..."})
+        while True:
+            # Keep the connection alive; server pushes events via broadcast helper
+            data = await websocket.receive_text()
+            await websocket.send_json({"type": "echo", "message": data})
+    except WebSocketDisconnect:
+        pass
+    finally:
+        if websocket in _BROADCAST_CLIENTS:
+            _BROADCAST_CLIENTS.remove(websocket)
+
+
+async def broadcast_event(event: dict):
+    """Push an event to all active dashboard broadcast subscribers."""
+    dead = []
+    for ws in _BROADCAST_CLIENTS:
+        try:
+            await ws.send_json(event)
+        except Exception:
+            dead.append(ws)
+    for ws in dead:
+        _BROADCAST_CLIENTS.remove(ws)
+
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
 
 @app.get("/", response_class=FileResponse)
 @app.get("/dashboard", response_class=FileResponse)
