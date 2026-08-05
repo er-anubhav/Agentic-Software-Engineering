@@ -1,3 +1,5 @@
+import os
+
 from agents.requirement_agent import RequirementAgent
 from agents.planner_agent import PlannerAgent
 from agents.architecture_agent import ArchitectureAgent
@@ -17,11 +19,14 @@ from agents.human_approval_agent import HumanApprovalAgent
 from agents.test_generation_agent import TestGenerationAgent
 
 from models.state import EngineeringState
+from core.config import get_settings
 
 
 class Workflow:
 
     def __init__(self):
+
+        self.settings = get_settings()
 
         # -----------------------------
         # Core Engineering Agents
@@ -38,50 +43,27 @@ class Workflow:
         # -----------------------------
         self.registry = AgentRegistry()
 
-        self.registry.register(
-            "DatabaseAgent",
-            DatabaseAgent()
-        )
-
-        self.registry.register(
-            "APIAgent",
-            APIAgent()
-        )
-
-        self.registry.register(
-            "ValidationAgent",
-            ValidationAgent()
-        )
-        self.registry.register(
-            "HumanApprovalAgent",
-            HumanApprovalAgent()
-        )
-
-        self.registry.register(
-            "CodeGenerationAgent",
-            CodeGenerationAgent()
-        )
-        self.registry.register(
-            "TestGenerationAgent",
-            TestGenerationAgent()
-        )
-        self.registry.register(
-            "SummaryAgent",
-            SummaryAgent()
-        )
+        self.registry.register("DatabaseAgent", DatabaseAgent())
+        self.registry.register("APIAgent", APIAgent())
+        self.registry.register("ValidationAgent", ValidationAgent())
+        self.registry.register("HumanApprovalAgent", HumanApprovalAgent())
+        self.registry.register("CodeGenerationAgent", CodeGenerationAgent())
+        self.registry.register("TestGenerationAgent", TestGenerationAgent())
+        self.registry.register("SummaryAgent", SummaryAgent())
 
         self.engine = ExecutionEngine(self.registry)
 
-    def execute(self, requirement: str):
+    def execute(self, requirement: str, repository_path: str = None):
 
         state = EngineeringState()
 
         state.requirement = requirement
 
-        # --------------------------------------------------
-        # Temporary repository path (Brownfield Demo)
-        # --------------------------------------------------
-        state.repository_path = r"C:\Projects\agentic-software-engineering"
+        # Dynamically set repository path
+        if repository_path and os.path.exists(repository_path):
+            state.repository_path = repository_path
+        else:
+            state.repository_path = self.settings.repository_path
 
         print("\n===== Requirement Agent =====")
         state = self.requirement_agent.execute(state)

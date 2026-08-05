@@ -1,67 +1,59 @@
-from config.llm import get_llm
+from agents.base_agent import BaseAgent
 from models.state import EngineeringState
+from schemas import ArchitectureSchema
 
 
-class ArchitectureAgent:
-
-    def __init__(self):
-        self.llm = get_llm()
+class ArchitectureAgent(BaseAgent):
 
     def execute(self, state: EngineeringState):
 
         prompt = f"""
-        You are a Principal Solution Architect.
+You are a Principal Solution Architect.
 
-        Your responsibility is ONLY to design the high-level software architecture.
+Your responsibility is ONLY to design the high-level software architecture.
 
-        Business Requirement:
+Business Requirement:
 
-        {state.requirement}
+{state.requirement}
 
-        Engineering Tasks:
+Engineering Tasks:
 
-        {state.tasks}
+{state.tasks}
 
-        DO NOT generate:
+DO NOT generate SQL, Database schema, REST API definitions, Python code, or tests.
 
-        - SQL
-        - Database schema
-        - REST API definitions
-        - Python code
-        - Dockerfiles
-        - Kubernetes manifests
-        - Unit tests
-        - Integration tests
-        - Deployment scripts
+Return ONLY valid JSON using this format:
 
-        Return ONLY valid JSON using this format:
+{{
+    "architecture_style": "Monolithic / Microservices",
 
+    "components": [
         {{
-        "architecture_style": "",
-
-        "components": [
-            {{
-            "name": "",
-            "responsibility": ""
-            }}
-        ],
-
-        "communication": [
-            {{
-            "from": "",
-            "to": "",
-            "protocol": ""
-            }}
-        ],
-
-        "data_flow": [
-            ""
-        ]
+            "name": "Component Name",
+            "responsibility": "Component Responsibility"
         }}
-        """
+    ],
 
-        response = self.llm.invoke(prompt)
+    "communication": [
+        {{
+            "from": "Sender",
+            "to": "Receiver",
+            "protocol": "HTTP/REST"
+        }}
+    ],
 
-        state.architecture = response.content
+    "data_flow": [
+        "Description of step 1",
+        "Description of step 2"
+    ]
+}}
+"""
+
+        try:
+            arch_data = self.invoke_json(prompt)
+            state.architecture = str(arch_data)
+        except Exception as e:
+            self.logger.warning(f"Architecture parsing failed: {e}, falling back to raw invoke")
+            state.architecture = self.invoke(prompt)
 
         return state

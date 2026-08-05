@@ -1,9 +1,7 @@
-import json
-from tools.json_parser import parse_llm_json
-from config.llm import get_llm
-from models.state import EngineeringState
-
+from models.state import EngineeringState, Requirement
 from agents.base_agent import BaseAgent
+from schemas import RequirementAnalysisSchema
+
 
 class RequirementAgent(BaseAgent):
 
@@ -19,11 +17,11 @@ Return ONLY valid JSON.
 JSON format:
 
 {{
-    "functional_requirements": [],
-    "non_functional_requirements": [],
-    "assumptions": [],
-    "ambiguities": [],
-    "risks": []
+    "functional_requirements": ["list of requirement strings"],
+    "non_functional_requirements": ["list of requirement strings"],
+    "assumptions": ["list of assumptions"],
+    "ambiguities": ["list of ambiguities"],
+    "risks": ["list of risks"]
 }}
 
 Requirement:
@@ -31,20 +29,32 @@ Requirement:
 {state.requirement}
 """
 
-        response = self.llm.invoke(prompt)
-
         try:
-            # result = parse_llm_json(response.content)
-            result = self.invoke_json(prompt)
+            analysis = self.invoke_structured(prompt, RequirementAnalysisSchema)
 
-            state.functional_requirements = result.get("functional_requirements", [])
-            state.non_functional_requirements = result.get("non_functional_requirements", [])
-            state.assumptions = result.get("assumptions", [])
-            state.ambiguities = result.get("ambiguities", [])
-            state.risks = result.get("risks", [])
+            # Convert string lists to Requirement objects if needed
+            state.functional_requirements = [
+                Requirement(id=f"FR-{i+1}", description=req)
+                for i, req in enumerate(analysis.functional_requirements)
+            ]
+            state.non_functional_requirements = [
+                Requirement(id=f"NFR-{i+1}", description=req)
+                for i, req in enumerate(analysis.non_functional_requirements)
+            ]
+            state.assumptions = [
+                Requirement(id=f"ASM-{i+1}", description=req)
+                for i, req in enumerate(analysis.assumptions)
+            ]
+            state.ambiguities = [
+                Requirement(id=f"AMB-{i+1}", description=req)
+                for i, req in enumerate(analysis.ambiguities)
+            ]
+            state.risks = [
+                Requirement(id=f"RSK-{i+1}", description=req)
+                for i, req in enumerate(analysis.risks)
+            ]
 
         except Exception as e:
-            print("JSON Parsing Error:", e)
-            print(response.content)
+            self.logger.error(f"Requirement parsing failed: {e}")
 
         return state
