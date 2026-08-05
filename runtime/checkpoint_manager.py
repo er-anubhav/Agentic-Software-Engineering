@@ -41,9 +41,12 @@ class CheckpointManager:
         filepath = os.path.join(self.storage_dir, f"{workflow_id}.json")
         if not os.path.exists(filepath):
             return None
-        with open(filepath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return Checkpoint(**data)
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return Checkpoint(**data)
+        except Exception:
+            return None
 
     def clear_checkpoint(self, workflow_id: str) -> None:
         filepath = os.path.join(self.storage_dir, f"{workflow_id}.json")
