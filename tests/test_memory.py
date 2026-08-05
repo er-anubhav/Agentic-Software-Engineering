@@ -1,10 +1,18 @@
 import unittest
 from memory.graph_db import CodeGraph, GraphNode, GraphRelationship
-from memory.vector_store import VectorMemoryStore
+from memory.vector_store import VectorMemoryStore, compute_cosine_similarity
 from memory.hybrid_memory import HybridMemoryEngine
 
 
 class TestMemory(unittest.TestCase):
+
+    def test_cosine_similarity_math(self):
+        v1 = [1.0, 0.0, 0.0]
+        v2 = [1.0, 0.0, 0.0]
+        v3 = [0.0, 1.0, 0.0]
+
+        self.assertAlmostEqual(compute_cosine_similarity(v1, v2), 1.0)
+        self.assertAlmostEqual(compute_cosine_similarity(v1, v3), 0.0)
 
     def test_code_graph_operations(self):
         graph = CodeGraph()
@@ -22,24 +30,39 @@ class TestMemory(unittest.TestCase):
         self.assertEqual(len(callers), 1)
         self.assertEqual(callers[0].name, "bar")
 
-    def test_vector_store_search(self):
+    def test_vector_store_fastembed_qdrant_cosine(self):
         vstore = VectorMemoryStore()
-        vstore.add_document("d1", "FastAPI web REST framework")
-        vstore.add_document("d2", "PostgreSQL relational database schema")
+        doc1 = vstore.add_document("d1", "FastAPI web REST framework authentication endpoint")
+        doc2 = vstore.add_document("d2", "PostgreSQL relational database schema migration table")
 
-        res = vstore.search("FastAPI framework", top_k=1)
+        self.assertIsNotNone(doc1.vector)
+        self.assertEqual(len(doc1.vector), 384)
+
+        res = vstore.search("FastAPI authentication", top_k=1)
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0].id, "d1")
+        self.assertGreater(res[0].score, 0.0)
 
-    def test_hybrid_memory_engine(self):
+    def test_hybrid_memory_engine_fusion(self):
         graph = CodeGraph()
+        fn1 = GraphNode(id="file1.py::login", label="Function", name="login")
+        fn2 = GraphNode(id="file2.py::auth_check", label="Function", name="auth_check")
+        graph.add_node(fn1)
+        graph.add_node(fn2)
+        graph.add_relationship(GraphRelationship(source_id="file2.py::auth_check", target_id="file1.py::login", rel_type="CALLS"))
+
         vstore = VectorMemoryStore()
-        vstore.add_document("doc1", "Authentication JWT token service")
+        vstore.add_document("doc1", "Authentication JWT token validator service")
 
         engine = HybridMemoryEngine(graph=graph, vector_store=vstore)
-        res = engine.query("Authentication JWT")
+        res = engine.query("login Authentication JWT")
+
         self.assertIn("graph_summary", res)
-        self.assertEqual(len(res["relevant_snippets"]), 1)
+        self.assertIn("structural_callers", res)
+        self.assertIn("semantic_vector_matches", res)
+        self.assertEqual(len(res["semantic_vector_matches"]), 1)
+        self.assertGreater(len(res["structural_callers"]), 0)
+        self.assertEqual(res["structural_callers"][0]["caller_name"], "auth_check")
 
 
 if __name__ == "__main__":
