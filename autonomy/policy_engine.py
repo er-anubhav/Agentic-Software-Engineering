@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Dict, Any, List, Optional
+# pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 from autonomy.progress_engine import ProgressReport
 
