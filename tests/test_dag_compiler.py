@@ -29,12 +29,19 @@ class TestDAGCompiler(unittest.TestCase):
 
         self.assertTrue(dag.has_cycles())
 
-    def test_dag_compiler(self):
+    def test_dynamic_dag_compiler(self):
         compiler = DAGCompiler()
-        dag = compiler.compile(["Task 1"])
+        tasks = [
+            "Design Database Schema",
+            "Design REST API Routes",
+            "Implement Code Logic",
+            "Run Pytest Test Suite"
+        ]
+        dag = compiler.compile(tasks)
         self.assertFalse(dag.has_cycles())
         sorted_nodes = dag.get_topological_sort()
-        self.assertEqual(len(sorted_nodes), 8)
+        self.assertEqual(len(sorted_nodes), 4)
+        self.assertEqual(sorted_nodes[0].owner_agent, "DatabaseAgent")
 
 
 if __name__ == "__main__":
