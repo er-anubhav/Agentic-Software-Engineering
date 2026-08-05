@@ -84,6 +84,13 @@ class EngineeringState:
     documentation: str = ""
 
     # ==========================================================
+    # Metadata & Execution Status
+    # ==========================================================
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    context_snippets: List[str] = field(default_factory=list)
+    execution_status: str = "COMPLETED"
+
+    # ==========================================================
     # Final Summary
     # ==========================================================
     summary: str = ""
