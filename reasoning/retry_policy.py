@@ -1,5 +1,6 @@
 import time
 from typing import Callable, Any, Optional
+# pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 
 

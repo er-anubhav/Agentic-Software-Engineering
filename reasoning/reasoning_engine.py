@@ -1,4 +1,5 @@
 from typing import Dict, Any, List, Optional, Type, TypeVar
+# pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 
 from reasoning.structured_outputs import (
