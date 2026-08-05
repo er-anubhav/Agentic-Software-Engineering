@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentic-se-platform
+  namespace: agentic-platform
+  labels:
+    app.kubernetes.io/name: agentic-se
+    app.kubernetes.io/component: control-plane
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agentic-se
+  template:
+    metadata:
+      labels:
+        app: agentic-se
+    spec:
+      containers:
+      - name: platform-engine
+        image: ghcr.io/er-anubhav/agentic-se:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "2000m"
+            memory: "4Gi"
+          limits:
+            cpu: "8000m"
+            memory: "16Gi"
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: platform-secrets
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: platform-config
+              key: REDIS_URL
+        ports:
+        - containerPort: 8000
+          name: http
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: agentic-se-hpa
+  namespace: agentic-platform
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: agentic-se-platform
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
