@@ -1,3 +1,7 @@
+import time
+from sandboxes.base_sandbox import SandboxUnavailableException
+
+
 class ExecutionEngine:
     """
     Executes agents dynamically based on the execution plan.
@@ -5,6 +9,7 @@ class ExecutionEngine:
     Features
     --------
     - Sequential orchestration
+    - Sandbox availability verification & security abortion
     - Retry on validation failure
     - Human approval before code generation
     - Stops workflow on critical failures
@@ -42,7 +47,18 @@ class ExecutionEngine:
 
             while retry <= self.MAX_RETRIES:
 
-                state = agent.execute(state)
+                try:
+                    state = agent.execute(state)
+                except SandboxUnavailableException as ex:
+                    print(f"\n[SANDBOX UNAVAILABLE] {ex}")
+                    retry += 1
+                    if retry > self.MAX_RETRIES:
+                        print("Sandbox unavailable after retries. Workflow aborted for security compliance.")
+                        state.validation_report = {"status": "ABORTED", "reason": str(ex)}
+                        return state
+                    print(f"Retrying Sandbox Connection ({retry}/{self.MAX_RETRIES})...")
+                    time.sleep(1)
+                    continue
 
                 # -------------------------------
                 # Validation Handling

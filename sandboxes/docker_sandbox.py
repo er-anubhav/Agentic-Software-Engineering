@@ -1,21 +1,26 @@
 import os
 import time
+import logging
 import subprocess
 from typing import Optional
 
-from sandboxes.base_sandbox import BaseSandbox, SandboxConfig, SandboxResult
+from sandboxes.base_sandbox import BaseSandbox, SandboxConfig, SandboxResult, SandboxUnavailableException
 from sandboxes.local_sandbox import LocalSandbox
+
+logger = logging.getLogger(__name__)
 
 
 class DockerSandbox(BaseSandbox):
     """
-    Containerized Docker sandbox provider with automatic local fallback.
+    Production-grade Containerized Docker sandbox provider with strict security isolation.
+    Refuses host fallback execution in production to prevent unisolated code execution.
     """
 
-    def __init__(self, workspace_path: str = "generated_project", config: Optional[SandboxConfig] = None):
+    def __init__(self, workspace_path: str = "generated_project", config: Optional[SandboxConfig] = None, allow_local_fallback: bool = False):
         super().__init__(config)
         self.workspace_path = os.path.abspath(workspace_path)
-        self.fallback = LocalSandbox(base_dir=self.workspace_path, config=self.config)
+        self.allow_local_fallback = allow_local_fallback
+        self.fallback = LocalSandbox(base_dir=self.workspace_path, config=self.config) if self.allow_local_fallback else None
         self.docker_available = self._check_docker()
 
     def _check_docker(self) -> bool:
@@ -28,7 +33,12 @@ class DockerSandbox(BaseSandbox):
     def start(self) -> None:
         os.makedirs(self.workspace_path, exist_ok=True)
         if not self.docker_available:
-            self.fallback.start()
+            if self.allow_local_fallback and self.fallback:
+                logger.warning("CRITICAL SECURITY NOTICE: Docker unavailable. Using LocalSandbox fallback (allow_local_fallback=True).")
+                self.fallback.start()
+            else:
+                logger.error("Docker daemon unavailable. Refusing host LocalSandbox fallback execution.")
+                raise SandboxUnavailableException("Docker sandbox runtime is unavailable. Refusing host execution for security compliance.")
 
     def write_file(self, relative_path: str, content: str) -> None:
         full_path = os.path.join(self.workspace_path, relative_path)
@@ -43,7 +53,10 @@ class DockerSandbox(BaseSandbox):
 
     def execute_command(self, command: str) -> SandboxResult:
         if not self.docker_available:
-            return self.fallback.execute_command(command)
+            if self.allow_local_fallback and self.fallback:
+                return self.fallback.execute_command(command)
+            else:
+                raise SandboxUnavailableException("Docker sandbox runtime is unavailable. Aborting command execution.")
 
         start_time = time.time()
         docker_cmd = [
@@ -79,5 +92,5 @@ class DockerSandbox(BaseSandbox):
             )
 
     def stop(self) -> None:
-        if not self.docker_available:
+        if not self.docker_available and self.allow_local_fallback and self.fallback:
             self.fallback.stop()

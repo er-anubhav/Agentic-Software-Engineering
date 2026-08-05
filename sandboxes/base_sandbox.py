@@ -3,6 +3,11 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
 
+class SandboxUnavailableException(Exception):
+    """Raised when containerized sandbox runtime is unavailable and host fallback is forbidden."""
+    pass
+
+
 class SandboxConfig(BaseModel):
     environment_id: str = "python:3.12-slim"
     timeout_seconds: int = 30

@@ -1,7 +1,7 @@
 import unittest
-import os
 from sandboxes.local_sandbox import LocalSandbox
 from sandboxes.docker_sandbox import DockerSandbox
+from sandboxes.base_sandbox import SandboxUnavailableException
 
 
 class TestSandboxes(unittest.TestCase):
@@ -20,8 +20,17 @@ class TestSandboxes(unittest.TestCase):
 
         sandbox.stop()
 
-    def test_docker_sandbox_fallback(self):
-        sandbox = DockerSandbox(workspace_path="/tmp/test_docker_sandbox")
+    def test_docker_sandbox_strict_security_refusal(self):
+        sandbox = DockerSandbox(workspace_path="/tmp/test_docker_sandbox", allow_local_fallback=False)
+        if not sandbox.docker_available:
+            with self.assertRaises(SandboxUnavailableException):
+                sandbox.start()
+        else:
+            sandbox.start()
+            sandbox.stop()
+
+    def test_docker_sandbox_explicit_test_fallback(self):
+        sandbox = DockerSandbox(workspace_path="/tmp/test_docker_fallback", allow_local_fallback=True)
         sandbox.start()
         sandbox.write_file("hello.py", "print('hello world')")
         content = sandbox.read_file("hello.py")
