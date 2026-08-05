@@ -39,6 +39,8 @@ class TestReflectionRepairAPI(unittest.TestCase):
 
         sandbox = LocalSandbox(base_dir="/tmp/test_repair_sandbox")
         sandbox.start()
+        sandbox.execute_command = MagicMock()
+        sandbox.execute_command.return_value = SandboxResult(exit_code=0, stdout="PASSED", stderr="")
 
         report = ReflectionReport(
             error_type="SyntaxError",
