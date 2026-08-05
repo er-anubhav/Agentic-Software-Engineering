@@ -3,6 +3,7 @@ src.core.config — Layer 0: System Configuration & Modular Domain Config Hierar
 """
 import os
 from typing import Optional
+# pyrefly: ignore [missing-import]
 from pydantic import BaseModel, Field
 
 

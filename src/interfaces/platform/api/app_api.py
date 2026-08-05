@@ -1,3 +1,4 @@
+import os
 import uuid
 import time
 import asyncio
@@ -195,3 +196,17 @@ async def job_websocket_endpoint(websocket: WebSocket, job_id: str):
     finally:
         if job_id in WEBSOCKET_SUBSCRIBERS and websocket in WEBSOCKET_SUBSCRIBERS[job_id]:
             WEBSOCKET_SUBSCRIBERS[job_id].remove(websocket)
+
+
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+static_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+@app.get("/", response_class=FileResponse)
+@app.get("/dashboard", response_class=FileResponse)
+async def serve_dashboard():
+    index_path = os.path.join(static_dir, "index.html")
+    return FileResponse(index_path)

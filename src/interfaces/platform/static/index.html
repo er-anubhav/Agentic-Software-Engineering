@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Software Engineering Platform — Real-Time Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">AGY</div>
+                <div class="brand-text">
+                    <h2>Agentic SE</h2>
+                    <span class="badge">v2.0 Enterprise</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-item active">
+                    <span class="icon">📊</span> Overview
+                </a>
+                <a href="#dag-visualizer" class="nav-item">
+                    <span class="icon">🧠</span> Task DAG Orchestrator
+                </a>
+                <a href="#diff-viewer" class="nav-item">
+                    <span class="icon">🔧</span> Surgical Patch Viewer
+                </a>
+                <a href="#metrics" class="nav-item">
+                    <span class="icon">⚡</span> System Telemetry
+                </a>
+            </nav>
+
+            <div class="system-status-widget">
+                <div class="status-indicator online"></div>
+                <div class="status-info">
+                    <span class="status-label">Gateway Engine</span>
+                    <span class="status-val" id="ws-status">Connected</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Real-Time Orchestration Dashboard</h1>
+                    <p>Dynamic Task DAG Execution, Surgical Diff Verification & System Observability</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="btn-refresh">Refresh Baseline</button>
+                    <button class="btn btn-primary" id="btn-new-run">+ New Autonomous Workflow</button>
+                </div>
+            </header>
+
+            <!-- Prompt Trigger Section (Collapsible Modal or Banner) -->
+            <section class="card prompt-section" id="prompt-section">
+                <div class="card-header">
+                    <h3>Submit Engineering Task Goal</h3>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="text" id="prompt-input" placeholder="e.g. Implement JWT authentication endpoint with SQLite WAL persistence and AST validation..." value="Build user authentication endpoint with JWT token validation">
+                        <button class="btn btn-primary btn-lg" id="btn-submit-goal">Compile & Execute DAG</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metric Cards Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">⚡</div>
+                    <div class="metric-data">
+                        <span class="metric-title">Indexing Speed (1k Classes)</span>
+                        <span class="metric-value" id="metric-indexing">54.66 ms</span>
+                        <span class="metric-sub">14,650 ops/sec</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon purple">🧠</div>
+                    <div class="metric-data">
+                        <span class="metric-title">200-Node DAG Compilation</span>
+                        <span class="metric-value" id="metric-dag">553.37 ms</span>
+                        <span class="metric-sub">Cycle-free validated</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon emerald">🔧</div>
+                    <div class="metric-data">
+                        <span class="metric-title">Surgical Repair Patch</span>
+                        <span class="metric-value" id="metric-repair">0.72 ms</span>
+                        <span class="metric-sub">AST zero-erosion</span>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon amber">💾</div>
+                    <div class="metric-data">
+                        <span class="metric-title">Prompt Cache Hit Ratio</span>
+                        <span class="metric-value" id="metric-cache">100.0%</span>
+                        <span class="metric-sub">SHA-256 Prompt Hashing</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Split View -->
+            <div class="dashboard-grid">
+                <!-- Task DAG Visualizer -->
+                <div class="card dag-card">
+                    <div class="card-header">
+                        <h3>Active Task DAG Execution Graph</h3>
+                        <span class="badge badge-outline" id="dag-node-count">6 Nodes</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="dag-pipeline" id="dag-pipeline">
+                            <!-- DAG nodes rendered dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-Time Event Stream Log -->
+                <div class="card console-card">
+                    <div class="card-header">
+                        <h3>Agent Execution Console</h3>
+                        <span class="badge badge-success">Live WebSockets</span>
+                    </div>
+                    <div class="card-body console-body" id="console-logs">
+                        <div class="log-line info">[System Bootstrapper] 6-Layer DDD Architecture initialized.</div>
+                        <div class="log-line info">[AST Linter] Executable architecture rules verified: Zero upward layer violations.</div>
+                        <div class="log-line success">[InferenceGateway] Multi-provider gateway online (OpenAI -> Anthropic -> Gemini -> Ollama).</div>
+                        <div class="log-line info">[EventBus] Subscribed audit logger and metrics subscribers.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Surgical Patch & Diff Preview Card -->
+            <div class="card diff-card" id="diff-viewer">
+                <div class="card-header">
+                    <h3>Surgical Code Repair Patch</h3>
+                    <span class="badge badge-emerald">AST Verified</span>
+                </div>
+                <div class="card-body">
+                    <div class="diff-file-header">Target: <code>src/infrastructure/storage/persistence/adapters/sqlite_adapter.py</code></div>
+                    <pre class="diff-view"><code><span class="diff-head">--- a/src/infrastructure/storage/persistence/adapters/sqlite_adapter.py</span>
+<span class="diff-head">+++ b/src/infrastructure/storage/persistence/adapters/sqlite_adapter.py</span>
+<span class="diff-chunk">@@ -42,6 +42,8 @@ class SQLiteAdapter(RelationalStorePort):</span>
+ def save_job(self, record: JobRecord) -> None:
+-    conn.execute("INSERT INTO jobs VALUES (?, ?)", (record.job_id, record.status))
++    with self.transaction():
++        conn.execute("INSERT OR REPLACE INTO jobs VALUES (?, ?, ?, ?, ?)", 
++                     (record.job_id, record.tenant_id, record.status, json.dumps(record.payload), record.created_at))</code></pre>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
