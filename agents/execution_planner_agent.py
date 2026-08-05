@@ -1,59 +1,36 @@
 from models.state import EngineeringState
+from orchestrator.dag_compiler import DAGCompiler
 
 
 class ExecutionPlannerAgent:
     """
-    Builds the execution pipeline for the engineering agents.
+    Builds a dynamic Task DAG execution pipeline for engineering agents.
     """
+
+    def __init__(self):
+        self.compiler = DAGCompiler()
 
     def execute(self, state: EngineeringState):
 
+        dag = self.compiler.compile(state.tasks)
+
+        sorted_nodes = dag.get_topological_sort()
+
         state.execution_plan = {
+            "dag_id": dag.dag_id,
             "execution_plan": [
-
                 {
-                    "step": 1,
-                    "agent": "DatabaseAgent",
-                    "objective": "Generate database schema and ORM models"
-                },
-
-                {
-                    "step": 2,
-                    "agent": "APIAgent",
-                    "objective": "Generate OpenAPI specification and REST API routes"
-                },
-
-                {
-                    "step": 3,
-                    "agent": "ValidationAgent",
-                    "objective": "Validate generated engineering artifacts"
-                },
-
-                {
-                    "step": 4,
-                    "agent": "HumanApprovalAgent",
-                    "objective": "Obtain human approval before generating source code"
-                },
-
-                {
-                    "step": 5,
-                    "agent": "CodeGenerationAgent",
-                    "objective": "Generate production-ready source code"
-                },
-
-                {
-                    "step": 6,
-                    "agent": "TestGenerationAgent",
-                    "objective": "Generate unit and integration test scaffolding"
-                },
-
-                {
-                    "step": 7,
-                    "agent": "SummaryAgent",
-                    "objective": "Generate engineering execution summary"
+                    "id": node.id,
+                    "step": node.step,
+                    "agent": node.agent,
+                    "objective": node.objective,
+                    "dependencies": node.dependencies
                 }
-
+                for node in sorted_nodes
             ]
         }
+
+        print(f"\n===== Execution Planner Agent =====")
+        print(f"Compiled Task DAG with {len(sorted_nodes)} execution nodes.")
 
         return state
