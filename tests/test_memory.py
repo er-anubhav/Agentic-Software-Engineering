@@ -66,11 +66,10 @@ class TestMemory(unittest.TestCase):
         res = engine.query("login Authentication JWT")
 
         self.assertIn("graph_summary", res)
-        self.assertIn("structural_callers", res)
-        self.assertIn("semantic_vector_matches", res)
-        self.assertEqual(len(res["semantic_vector_matches"]), 1)
-        self.assertGreater(len(res["structural_callers"]), 0)
-        self.assertEqual(res["structural_callers"][0]["caller_name"], "auth_check")
+        self.assertIn("intent", res)
+        self.assertIn("ranked_snippets", res)
+        self.assertIn("context_prompt_text", res)
+        self.assertGreater(len(res["ranked_snippets"]), 0)
 
 
 if __name__ == "__main__":

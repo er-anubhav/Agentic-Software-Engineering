@@ -1,47 +1,41 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from memory.graph_db import CodeGraph
 from memory.vector_store import VectorMemoryStore, VectorDocument
+from memory.context_engine import ContextEngine, ContextPayload
 
 
 class HybridMemoryEngine:
     """
-    Production-grade Hybrid Memory Engine fusing structural Neo4j/CodeGraph nodes,
-    FastEmbed dense vector embeddings, and Qdrant Cosine Similarity search.
+    Production-grade Multi-Tenant Hybrid Memory Engine fusing structural Neo4j CodeGraph nodes,
+    FastEmbed dense vector embeddings, Qdrant HNSW vector search, and 9-stage ContextEngine RRF re-ranking.
     """
 
     def __init__(self, graph: CodeGraph = None, vector_store: VectorMemoryStore = None):
         self.graph = graph or CodeGraph()
         self.vector_store = vector_store or VectorMemoryStore()
+        self.context_engine = ContextEngine(graph=self.graph, vector_store=self.vector_store)
 
-    def add_code_document(self, doc_id: str, text: str, metadata: Dict[str, Any] = None) -> VectorDocument:
-        return self.vector_store.add_document(doc_id, text, metadata)
+    def add_code_document(self, doc_id: str, text: str, metadata: Dict[str, Any] = None, repo_id: str = "default") -> VectorDocument:
+        return self.vector_store.add_document(doc_id, text, metadata=metadata, repo_id=repo_id)
 
-    def query(self, prompt: str, top_k: int = 5) -> Dict[str, Any]:
-        vector_results = self.vector_store.search(prompt, top_k=top_k)
+    def query(self, prompt: str, repo_id: str = "default", top_k: int = 5) -> Dict[str, Any]:
+        payload: ContextPayload = self.context_engine.query(prompt=prompt, repo_id=repo_id, top_k=top_k)
         graph_summary = self.graph.get_summary()
 
-        # Structural caller lookup if a symbol is mentioned in prompt
-        graph_callers = []
-        words = prompt.split()
-        for word in words:
-            clean_word = word.strip("()'\",.;:")
-            callers = self.graph.find_callers(clean_word)
-            if callers:
-                graph_callers.extend([
-                    {"symbol": clean_word, "caller_id": caller.id, "caller_name": caller.name}
-                    for caller in callers
-                ])
-
         return {
+            "intent": payload.intent,
+            "entities": payload.entities,
+            "repo_id": payload.repo_id,
             "graph_summary": graph_summary,
-            "structural_callers": graph_callers,
-            "semantic_vector_matches": [
+            "context_prompt_text": payload.assembled_prompt_context,
+            "ranked_snippets": [
                 {
-                    "id": doc.id,
-                    "text": doc.text,
-                    "score": doc.score,
-                    "metadata": doc.metadata
+                    "id": snip.id,
+                    "text": snip.text,
+                    "source": snip.source_type,
+                    "rrf_score": snip.rrf_score,
+                    "rank": snip.rank
                 }
-                for doc in vector_results
+                for snip in payload.ranked_snippets
             ]
         }
